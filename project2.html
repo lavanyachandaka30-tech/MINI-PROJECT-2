@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expense Category Budgeter</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#6a11cb,#2575fc);
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:700px;
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+h1{
+    text-align:center;
+    color:#333;
+    margin-bottom:20px;
+}
+
+.form-group{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr auto;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+input{
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:8px;
+}
+
+button{
+    background:#2575fc;
+    color:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#125be0;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th{
+    background:#2575fc;
+    color:white;
+    padding:12px;
+}
+
+td{
+    padding:10px;
+    text-align:center;
+    border-bottom:1px solid #ddd;
+}
+
+.remaining-positive{
+    color:green;
+    font-weight:bold;
+}
+
+.remaining-negative{
+    color:red;
+    font-weight:bold;
+}
+
+.total{
+    margin-top:20px;
+    padding:15px;
+    background:#f4f7ff;
+    border-radius:10px;
+    font-size:18px;
+    font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>💰 Expense Category Budgeter</h1>
+
+    <div class="form-group">
+        <input type="text" id="category" placeholder="Category">
+        <input type="number" id="budget" placeholder="Budget Amount">
+        <input type="number" id="expense" placeholder="Expense Amount">
+        <button onclick="addExpense()">Add</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Budget</th>
+                <th>Expense</th>
+                <th>Remaining</th>
+            </tr>
+        </thead>
+        <tbody id="expenseTable">
+        </tbody>
+    </table>
+
+    <div class="total" id="summary">
+        Total Budget: ₹0 | Total Expense: ₹0
+    </div>
+</div>
+
+<script>
+let totalBudget = 0;
+let totalExpense = 0;
+
+function addExpense() {
+    const category = document.getElementById("category").value;
+    const budget = parseFloat(document.getElementById("budget").value);
+    const expense = parseFloat(document.getElementById("expense").value);
+
+    if (!category || isNaN(budget) || isNaN(expense)) {
+        alert("Please fill all fields.");
+        return;
+    }
+
+    const remaining = budget - expense;
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+        <td>${category}</td>
+        <td>₹${budget.toFixed(2)}</td>
+        <td>₹${expense.toFixed(2)}</td>
+        <td class="${remaining >= 0 ? 'remaining-positive' : 'remaining-negative'}">
+            ₹${remaining.toFixed(2)}
+        </td>
+    `;
+
+    document.getElementById("expenseTable").appendChild(row);
+
+    totalBudget += budget;
+    totalExpense += expense;
+
+    document.getElementById("summary").innerHTML =
+        `Total Budget: ₹${totalBudget.toFixed(2)} | Total Expense: ₹${totalExpense.toFixed(2)}`;
+
+    document.getElementById("category").value = "";
+    document.getElementById("budget").value = "";
+    document.getElementById("expense").value = "";
+}
+</script>
+
+</body>
+</html>
